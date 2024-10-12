@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+      - slug-service
+    env_file:
+      - ./backend/.env 
+
+  slug-service:
+    build: ./slug-service
+    ports:
+      - '8081:8081'
+
+  postgres:
+    build: ./database
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: urlshortener
+    ports:
+      - '5432:5432'
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend

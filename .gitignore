@@ -1,0 +1,28 @@
+# Node.js
+node_modules/
+
+# Dependency directories
+frontend/node_modules/
+backend/node_modules/
+slug-service/node_modules/
+
+# Build directories
+frontend/build/
+frontend/dist/
+backend/dist/
+slug-service/dist/
+
+# Environment variables
+.env
+
+# Jest Coverage
+coverage/
+
+# Ignore Terraform files
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+terraform.tfstate.backup
+
+#GCP Key
+gcp-key.json

@@ -1,11 +1,11 @@
 # URL Shortener Project
 
-This project is a URL shortener web application similar to Bitly or TinyURL. It allows users to create shortened URLs, manage them, and view statistics about their usage. The project is divided into three main components:
+This project is a URL shortener web application similar to Bitly or TinyURL. It allows users to create shortened URLs, manage them, and view statistics about their usage. The project is divided into four main components:
 
 - **Backend**: An Express-based RESTful API that handles URL shortening, redirection, and statistics.
 - **Slug Service**: A microservice responsible for generating unique slugs for shortened URLs.
 - **Frontend**: A React application that provides a user interface to interact with the URL shortener.
-- **database**: Schema definition for the postgres database.
+- **Database**: A simple database created in Postgres to store shortened URL.
 
 ## Prerequisites
 
@@ -17,6 +17,7 @@ This project is a URL shortener web application similar to Bitly or TinyURL. It 
 - `backend/`: The Express server handling the main API logic.
 - `slug-service/`: The microservice for generating unique slugs.
 - `frontend/`: The React app for interacting with the URL shortener.
+- `database/`: Schema definition for the postgres database.
 
 ## Running the Project Using Docker
 

@@ -117,11 +117,11 @@ resource "google_cloud_run_service" "slug_service" {
           value = google_sql_user.postgres_user.name
         }
         env {
-          name  = "POSTGRES_PASS"
+          name  = "POSTGRES_PASSWORD"
           value = google_sql_user.postgres_user.password
         }
         env {
-          name  = "POSTGRES_NAME"
+          name  = "POSTGRES_DB"
           value = google_sql_database.shortener_db.name
         }
         env {

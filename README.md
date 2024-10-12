@@ -9,8 +9,10 @@ This project is a URL shortener web application similar to Bitly or TinyURL. It 
 
 ## Prerequisites
 
-- Docker and Docker Desktop installed.
-- Node.js and npm (for running locally).
+- **Docker and Docker Compose**: For containerizing and running the services.
+- **Node.js and npm**: For local development and running unit tests.
+- **Postman** (Optional): For manually testing API endpoints.
+- **psql or SQL Client** (Optional): For interacting with the PostgreSQL database directly.
 
 ## Project Structure
 
@@ -47,16 +49,12 @@ Ensure you are in the root directory of the project, then run the following comm
 docker-compose up --build
 ```
 
-This command will:
-
-- Build and run the backend server, slug service, and frontend.
-- Run a PostgreSQL container to store URLs and statistics.
-
 ### Step 4: Access the Application
 
 - **Frontend**: Open [http://localhost:3000](http://localhost:3000) in your browser.
 - **Backend API**: Available at [http://localhost:8080](http://localhost:8080).
 - **Slug Service**: Internally used by the backend (port 8081).
+- **PgAdmin**: Administrate the database at [http://localhost:5050](http://localhost:5050)
 
 ### Step 5: Stopping the Services
 
@@ -66,11 +64,21 @@ To stop the Docker containers, run:
 docker-compose down
 ```
 
+### Explanation of Each Container
+
+This project generate 5 Docker images:
+
+1. **backend**: The backend service is the core API of the application. It handles business logic, processes client requests, and interacts with the PostgreSQL database. It also communicates with the `slug-service` to generate unique identifiers or slugs needed for functionalities like URL shortening.
+2. **slug-service**: The slug-service is a microservice responsible for generating unique slugs or identifiers. This is particularly useful for future expansion or scaling. It can be upgraded independently and can be called by multiple services.
+3. **postgres**: This service runs a PostgreSQL database instance. It stores all the persistent data required by the application. The database is configured using the provided environment variables and is exposed on the default PostgreSQL port.
+4. **pgadmin**:  pgAdmin is a web-based administration tool for PostgreSQL. 
+5. **frontend**: The frontend service serving the client-side React app. 
+
 ## Running Automated Unit-Tests
 
 The project includes unit tests that verify the correctness of the endpoints and logic.
 
-To run the tests, navigate to either backend or slug-service and then run the following commands:
+To run the tests, navigate to either `backend` or `slug-service` and then run the following commands:
 
 ```bash
 npm test
@@ -78,32 +86,11 @@ npm test
 
 The tests use Jest and Supertest to verify API endpoints, and they include checks for edge cases and error handling.  The --coverage flag is used to generate a code coverage report.
 
-## API Endpoints and Postman Testing
-
-### Backend API
-
-The following API are included for this project:
-
-- **POST /shorten**: Shorten a new URL.
-  - Request Body: `{ "url": "<original_url>" }`
-  - Response: `{ "shortenedUrl": "<shortened_url>" }`
-
-- **GET /:slug**: Redirect to the original URL based on the provided slug.
-  - Example: `/abc123`
-
-- **GET /stats**: Get statistics about shortened URLs.
-  - Query Parameters: `startDate` and `endDate` (optional).
-  - Response: List of shortened URLs with statistics.
-
 ## Postman Testing
 
 You can manually test the API endpoints using Postman by following these steps:
 
-### Step 1: Set Up Postman
-
-- Open Postman and create a new request.
-
-### Step 2: Test Endpoints
+### Step 1: Test Backend Endpoints
 
 1. **POST /shorten**
    - **URL**: `http://localhost:8080/shorten`
@@ -129,6 +116,21 @@ You can manually test the API endpoints using Postman by following these steps:
      - `endDate`: Specify the end date in `YYYY-MM-DD` format.
    - **Send Request**: Click "Send" and verify that the response contains statistics about shortened URLs.
 
+### Step 2: Test Slug-Service Endpoints
+
+1. **GET /generate-slug**
+   - **URL**: `http://localhost:8081/generate-slug`
+   - **Method**: GET
+   - **Send Request**: Click "Send" and verify that the response contains a unique slug.
+   - **Expected Response**:
+     ```json
+     {
+       "slug": "abc123"
+     }
+     ```
+     *Note*: The `slug` value will be a randomly generated string of 6 characters.
+
+
 ## Deploying to GCP using Terraform
 
 This project can be deployed on Google Cloud Platform (GCP) using Terraform. Below are the instructions for pushing Docker images and running Terraform.
@@ -136,41 +138,58 @@ This project can be deployed on Google Cloud Platform (GCP) using Terraform. Bel
 
 ### Prerequisites for GCP
 
-- Google Cloud SDK installed and configured.
-- A GCP project set up (e.g., `url-shortener-project-438318`).
-- A service account key file (`gcp-key.json`) downloaded for authentication purposes.
-- Docker installed and configured.
-- Terraform installed.
+Before deploying to GCP, ensure you have the following:
+
+- **Google Cloud SDK:** Installed and configured.
+- **Terraform:** Installed.
+- **GCP Project:** A GCP project is set up (e.g., `url-shortener-project-438318`).
+- **Service Account & Key:** A service account is created and it's key file (`gcp-key.json`) downloaded for authentication purposes.
+- **Docker:** Installed and configured.
 
 ### Setting Up GCP
-1. Enable the necessary APIs in GCP, including:
-   - Google Compute Engine API
-   - Google Cloud Run API
-   - Google Cloud SQL API
+1. Enable Necessary APIs in GCP:
+   - Compute Engine API: Required for provisioning virtual machines.
+   - Cloud Run API: Required for deploying containerized applications.
+   - Cloud SQL Admin API: Required for managing PostgreSQL instances.
+   - Artifact Registry API: Required for storing and retrieving container images.
 
 2. Authenticate using the service account key file:
    ```sh
    export GOOGLE_APPLICATION_CREDENTIALS="gcp-key.json"
    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
    ```
-
 ### Step 1: Pre-Build and Push Docker Images
-The Terraform configuration uses custom Docker images that need to be pushed to Google Container Registry (GCR) prior to running Terraform. Use the `docker_push.sh` script to push the Docker images after building the image.
+The Terraform configuration uses custom Docker images that need to be pushed to Artifact Registry prior to running Terraform. Use the `docker_push.sh` script to push the Docker images after building them.
 
-### Running the Docker Push Script
-1. Make the `docker_push.sh` script executable:
+#### Configuring Artifact Registry
+1. Set Up an Artifact Registry Repository
+   - Create a Docker repository in Artifact Registry named `url-shortener` or any name you prefer.
+   - Note the repository location (e.g., `us-central1-docker.pkg.dev`).
+2. Authenticate Docker with Artifact Registry
    ```sh
-   chmod +x docker_push.sh
+   gcloud auth configure-docker us-central1-docker.pkg.dev
    ```
+   Replace `us-central1` with your repository's region.
 
-2. Run the script:
-   ```sh
-   ./docker_push.sh
-   ```
-   This will authenticate Docker with GCR, build, and push the following images:
-   - `url-shortener-backend`
-   - `url-shortener-frontend`
-   - `url-shortener-slug-service`
+#### Build Docker Images Locally
+
+Before running `docker_push.sh`, ensure you've built the Docker images:
+```sh
+docker build -t url-shortener-backend:latest ./backend
+docker build -t url-shortener-frontend:latest ./frontend
+docker build -t url-shortener-slug-service:latest ./slug-service
+```
+
+#### Running the Docker Push Script
+Run the script:
+
+```sh
+./docker_push.sh
+```
+This will authenticate Docker with Artifact Registry, build, and push the following images:
+- `url-shortener-backend`
+- `url-shortener-frontend`
+- `url-shortener-slug-service`
 
 ### Step 2: Running Terraform
 
@@ -185,14 +204,14 @@ terraform init
 The `terraform plan` command creates an execution plan to help visualize the changes that Terraform will make in the GCP environment.
 
 ```sh
-terraform plan -var="credentials=gcp-key.json"
+terraform plan
 ```
 
 #### 3. Apply the Terraform Configuration
 To deploy the infrastructure to GCP, run the `terraform apply` command.
 
 ```sh
-terraform apply -var="credentials=gcp-key.json"
+terraform apply
 ```
 
 This command will prompt you to confirm the changes. Type `yes` to proceed.
@@ -201,7 +220,8 @@ This command will prompt you to confirm the changes. Type `yes` to proceed.
 After the PostgreSQL instance is created by Terraform, you need to manually run an SQL script to initialize the database.
 
 #### Running the Initialization Script
-1. Connect to the PostgreSQL instance using the public IP address.
+
+1. Connect to the PostgreSQL instance using the public IP address using pgAdmin.
 2. Run the `init.sql` script located in `database/init.sql` to create the necessary tables:
 
    ```sql
@@ -214,22 +234,20 @@ After the PostgreSQL instance is created by Terraform, you need to manually run 
    );
    ```
 
-You can use a tool like `psql` to run this script or any other SQL client of your choice.
+You can also use a tool like `psql` to run this script or any other SQL client of your choice.
 
 ### Important Notes
-- The Docker images must be pushed before running Terraform to ensure that GCP Cloud Run can pull them.
-- Make sure to keep your `gcp-key.json` file secure.
-- Modify the firewall rules or authorized networks in `terraform.tf` if you need more restricted access to the deployed services.
+- **Docker Images:** Must be pushed before running Terraform to ensure that GCP Cloud Run can pull them.
+- **Security:** Keep your gcp-key.json file secure.
+- **Firewall Rules:** Modify the firewall rules or authorized networks in your Terraform configuration if you need more restricted access to the deployed services.
 
 ### Cleanup
 To destroy the resources created by Terraform, run:
 
 ```sh
-terraform destroy -var="credentials=gcp-key.json"
+terraform destroy
 ```
 This will remove all the resources created by the Terraform script.
-
-
 
 ## Future Expansion
 

@@ -52,7 +52,6 @@ resource "google_cloud_run_service" "backend_service" {
     latest_revision = true
   }
 
-  # IAM policy for Cloud Run to allow unauthenticated requests
   autogenerate_revision_name = true
 }
 
@@ -62,6 +61,7 @@ resource "google_cloud_run_service_iam_member" "backend_service_noauth" {
   location    = google_cloud_run_service.backend_service.location
   role        = "roles/run.invoker"
   member      = "allUsers"
+  depends_on = [google_cloud_run_service.backend_service]
 }
 
 # Deploy the Slug-Service to Cloud Run
@@ -107,7 +107,6 @@ resource "google_cloud_run_service" "slug_service" {
     latest_revision = true
   }
 
-  # IAM policy for Cloud Run to allow unauthenticated requests
   autogenerate_revision_name = true
 }
 
@@ -117,6 +116,7 @@ resource "google_cloud_run_service_iam_member" "slug_service_noauth" {
   location    = google_cloud_run_service.slug_service.location
   role        = "roles/run.invoker"
   member      = "allUsers"
+  depends_on = [google_cloud_run_service.slug_service]
 }
 
 # Deploy the Frontend Service to Cloud Run
@@ -160,6 +160,7 @@ resource "google_cloud_run_service_iam_member" "frontend_noauth" {
   location    = google_cloud_run_service.frontend_instance.location
   role        = "roles/run.invoker"
   member      = "allUsers"
+  depends_on = [google_cloud_run_service.frontend_instance]
 }
 
 # Create a Cloud SQL instance for PostgreSQL

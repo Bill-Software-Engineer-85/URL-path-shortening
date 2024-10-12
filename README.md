@@ -135,7 +135,6 @@ You can manually test the API endpoints using Postman by following these steps:
 
 This project can be deployed on Google Cloud Platform (GCP) using Terraform. Below are the instructions for pushing Docker images and running Terraform.
 
-
 ### Prerequisites for GCP
 
 Before deploying to GCP, ensure you have the following:
@@ -147,7 +146,7 @@ Before deploying to GCP, ensure you have the following:
 - **Docker:** Installed and configured.
 - **psql or SQL Client (Optional):** For interacting with the PostgreSQL database directly.
 
-### Setting Up GCP
+### Step 1: Setting Up GCP
 1. Enable Necessary APIs in GCP:
    - Compute Engine API: Required for provisioning virtual machines.
    - Cloud Run API: Required for deploying containerized applications.
@@ -159,7 +158,7 @@ Before deploying to GCP, ensure you have the following:
    export GOOGLE_APPLICATION_CREDENTIALS="gcp-key.json"
    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
    ```
-### Setting Up Your Google Cloud Project ID
+### Step 2: Setting Up Your Google Cloud Project ID
 
 Before running Terraform, you need to specify your GCP project ID. This is done by creating a `terraform.tfvars` file.
 
@@ -177,7 +176,7 @@ project_id = "your-google-cloud-project-id"
 
 - Consistent Variable Usage: Ensure that the variable name `project_id` in your Terraform configuration matches the one in your `terraform.tfvars` file.
 
-### Step 1: Pre-Build and Push Docker Images
+### Step 3: Pre-Build and Push Docker Images
 The Terraform configuration uses custom Docker images that need to be pushed to Artifact Registry prior to running Terraform. Use the `docker_push.sh` script to push the Docker images after building them.
 
 #### Configuring Artifact Registry
@@ -213,7 +212,7 @@ This will authenticate Docker with Artifact Registry, build, and push the follow
 - `url-shortener-frontend`
 - `url-shortener-slug-service`
 
-### Step 2: Running Terraform
+### Step 4: Running Terraform
 
 #### 1. Initialize Terraform
 First, initialize Terraform to set up the environment.
@@ -238,7 +237,7 @@ terraform apply
 
 This command will prompt you to confirm the changes. Type `yes` to proceed.
 
-### Step 3: Initialize the Database
+### Step 5: Initialize the Database
 After the PostgreSQL instance is created by Terraform, you need to manually run an SQL script to initialize the database.
 
 #### Running the Initialization Script

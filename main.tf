@@ -43,7 +43,7 @@ resource "google_cloud_run_service" "backend_service" {
   template {
     spec {
       containers {
-        image = "gcr.io/url-shortener-project-438318/url-shortener-backend:latest"
+        image = "us-central1-docker.pkg.dev/url-shortener-project-438318/url-shortener/url-shortener-backend:latest"
         ports {
           container_port = 8080
         }
@@ -102,7 +102,7 @@ resource "google_cloud_run_service" "slug_service" {
   template {
     spec {
       containers {
-        image = "gcr.io/url-shortener-project-438318/url-shortener-slug-service:latest"
+        image = "us-central1-docker.pkg.dev/url-shortener-project-438318/url-shortener/url-shortener-slug-service:latest"
         ports {
           container_port = 8081
         }
@@ -158,7 +158,7 @@ resource "google_cloud_run_service" "frontend_instance" {
   template {
     spec {
       containers {
-        image = "gcr.io/url-shortener-project-438318/url-shortener-frontend:latest"
+        image = "us-central1-docker.pkg.dev/url-shortener-project-438318/url-shortener/url-shortener-frontend:latest"
         ports {
           container_port = 3000
         }

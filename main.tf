@@ -5,36 +5,6 @@ provider "google" {
   zone        = "us-central1-a"
 }
 
-# Create a VPC network
-resource "google_compute_network" "default" {
-  name = "url-shortener-network"
-}
-
-# Create a firewall rule to allow HTTP traffic
-resource "google_compute_firewall" "default" {
-  name    = "allow-http"
-  network = google_compute_network.default.name
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "5050", "8080", "8081", "3000"]
-  }
-
-  # Allow traffic from any IP address
-  source_ranges = ["0.0.0.0/0"]
-}
-resource "google_compute_firewall" "allow-ssh" {
-  name    = "allow-ssh"
-  network = google_compute_network.default.name
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-}
-
 # Deploy the Backend to Cloud Run
 resource "google_cloud_run_service" "backend_service" {
   name     = "backend-service"

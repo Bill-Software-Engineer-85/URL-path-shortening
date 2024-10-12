@@ -19,7 +19,7 @@ This project is a URL shortener web application similar to Bitly or TinyURL. It 
 - `backend/`: The Express server handling the main API logic.
 - `slug-service/`: The microservice for generating unique slugs.
 - `frontend/`: The React app for interacting with the URL shortener.
-- `database/`: Schema definition for the postgres database.
+- `database/`: Schema and docker definition for the postgres database.
 
 ## Running the Project Using Docker
 
@@ -34,7 +34,7 @@ cd url-shortener
 
 ### Step 2: Setting Up Environment Variables
 
-To configure environment variables for the project, create a `.env` file in the root directory of each component (`backend`, `slug-service`, etc.). You can use the provided `.env.example` as a reference:
+To configure environment variables for the project, create a `.env` file in the root directory of each component (`backend`, `slug-service`, etc.). You can use the provided `.env.example` in each of the component folder as a reference:
 
 ```bash
 cp .env.example .env
@@ -171,9 +171,12 @@ The Terraform configuration uses custom Docker images that need to be pushed to 
    ```
    Replace `us-central1` with your repository's region.
 
-#### Build Docker Images Locally
+#### Building Docker Images Locally
 
-Before running `docker_push.sh`, ensure you've built the Docker images:
+Before running `docker_push.sh`, ensure you've built the Docker images if you haven't already.  
+
+If you are running and testing the project locally, then all image should have been built; if not, build them manually by running the following commands:
+
 ```sh
 docker build -t url-shortener-backend:latest ./backend
 docker build -t url-shortener-frontend:latest ./frontend
@@ -275,11 +278,6 @@ Here are some potential features that could be added to expand the functionality
 6. **API Key System**
    - Add an API key system for accessing the API programmatically.
    - Users would need an API key to interact with the API, and this would help control access and prevent abuse.
-
-## Notes
-
-- The project is configured to connect to a PostgreSQL database, which is managed through Docker.
-- Make sure Docker is running before executing the commands to ensure all services run properly.
 
 ## Credit & Contact
 - Author: Bill Yu

@@ -145,6 +145,7 @@ Before deploying to GCP, ensure you have the following:
 - **GCP Project:** A GCP project is set up (e.g., `url-shortener-project-438318`).
 - **Service Account & Key:** A service account is created and it's key file (`gcp-key.json`) downloaded for authentication purposes.
 - **Docker:** Installed and configured.
+- **psql or SQL Client (Optional):** For interacting with the PostgreSQL database directly.
 
 ### Setting Up GCP
 1. Enable Necessary APIs in GCP:
@@ -158,12 +159,30 @@ Before deploying to GCP, ensure you have the following:
    export GOOGLE_APPLICATION_CREDENTIALS="gcp-key.json"
    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
    ```
+### Setting Up Your Google Cloud Project ID
+
+Before running Terraform, you need to specify your GCP project ID. This is done by creating a `terraform.tfvars` file.
+
+#### Create a `terraform.tfvars` File
+
+In the root directory of your project (where your Terraform configuration files are located), create a file named `terraform.tfvars`.  You may use the `terraform.tfvars.example` file as a template.
+
+Add the following content to `terraform.tfvars`:
+```sh
+project_id = "your-google-cloud-project-id"
+```
+**Important Notes:**
+
+- Do Not Commit `terraform.tfvars` to Version Control: This file contains your project ID.
+
+- Consistent Variable Usage: Ensure that the variable name `project_id` in your Terraform configuration matches the one in your `terraform.tfvars` file.
+
 ### Step 1: Pre-Build and Push Docker Images
 The Terraform configuration uses custom Docker images that need to be pushed to Artifact Registry prior to running Terraform. Use the `docker_push.sh` script to push the Docker images after building them.
 
 #### Configuring Artifact Registry
 1. Set Up an Artifact Registry Repository
-   - Create a Docker repository in Artifact Registry named `url-shortener` or any name you prefer.
+   - Create a Docker repository in Artifact Registry named `url-shortener`.
    - Note the repository location (e.g., `us-central1-docker.pkg.dev`).
 2. Authenticate Docker with Artifact Registry
    ```sh

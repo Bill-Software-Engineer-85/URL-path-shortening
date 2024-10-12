@@ -78,21 +78,6 @@ npm test
 
 The tests use Jest and Supertest to verify API endpoints, and they include checks for edge cases and error handling.  The --coverage flag is used to generate a code coverage report.
 
-## API Endpoints
-
-### Backend API
-
-- **POST /shorten**: Shorten a new URL.
-  - Request Body: `{ "url": "<original_url>" }`
-  - Response: `{ "shortenedUrl": "<shortened_url>" }`
-
-- **GET /:slug**: Redirect to the original URL based on the provided slug.
-  - Example: `/abc123`
-
-- **GET /stats**: Get statistics about shortened URLs.
-  - Query Parameters: `startDate` and `endDate` (optional).
-  - Response: List of shortened URLs with statistics.
-
 ## API Endpoints and Postman Testing
 
 ### Backend API
@@ -272,14 +257,6 @@ Here are some potential features that could be added to expand the functionality
 6. **API Key System**
    - Add an API key system for accessing the API programmatically.
    - Users would need an API key to interact with the API, and this would help control access and prevent abuse.
-
-7. **QR Code Generation**
-   - Automatically generate a QR code for each shortened URL.
-   - Users could download the QR code to share the link easily.
-
-8. **Custom Domain Support**
-   - Allow users to use their own custom domains for shortened URLs.
-   - This would be especially useful for businesses looking to brand their short links.
 
 ## Notes
 

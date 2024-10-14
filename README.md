@@ -49,7 +49,7 @@ The frontend of the project demonstrates the use of modern web development techn
 
 This combination of backend, frontend, and testing technologies provides a well-rounded approach to building robust and scalable web applications, especially in the context of SaaS platforms.
 
-## System Architecture
+## Main Components
 
 This project is a URL shortener web application similar to Bitly or TinyURL. It allows users to create shortened URLs, manage them, and view statistics about their usage. The project is divided into four main components:
 
@@ -58,13 +58,6 @@ This project is a URL shortener web application similar to Bitly or TinyURL. It 
 - **Frontend**: A React application that provides a user interface to interact with the URL shortener.
 - **Database**: A simple database created in Postgres to store shortened URL.
 
-## Prerequisites
-
-- **Docker and Docker Compose**: For containerizing and running the services.
-- **Node.js and npm**: For local development and running unit tests.
-- **Postman** (Optional): For manually testing API endpoints.
-- **psql or SQL Client** (Optional): For interacting with the PostgreSQL database directly.
-
 ## Project Structure
 
 - `backend/`: The Express server handling the main API logic.
@@ -72,7 +65,14 @@ This project is a URL shortener web application similar to Bitly or TinyURL. It 
 - `frontend/`: The React app for interacting with the URL shortener.
 - `database/`: Schema and docker definition for the postgres database.
 
-## Running the Project Using Docker
+## Prerequisites for Local Deployment
+
+- **Docker and Docker Compose**: For containerizing and running the services.
+- **Node.js and npm**: For local development and running unit tests.
+- **Postman** (Optional): For manually testing API endpoints.
+- **psql or SQL Client** (Optional): For interacting with the PostgreSQL database directly.
+
+## Running the Project Locally Using Docker
 
 You can run all components using Docker to simplify the setup.
 

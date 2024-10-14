@@ -314,52 +314,6 @@ terraform destroy
 ```
 This will remove all the resources created by the Terraform script.
 
-## Technologies Showcased
-
-This project showcases several key technologies and design principles, focusing on system architecture, DevOps, SaaS development, and web development:
-
-1. **Microservices Architecture**: The project is designed using a microservice approach, where the URL shortening logic is separated into different components:
-   - **Backend**: A RESTful API built with Express that handles core business logic.
-   - **Slug Service**: A dedicated microservice responsible for generating unique slugs. As a standalone microservice, it has independent **scaling capabilities**, meaning it can be easily upgraded or scaled without affecting other parts of the system. This modular design improves flexibility and allows for isolated development or scaling of specific components.
-
-2. **Containerization with Docker**: All components of the project are containerized using **Docker**, allowing for consistent environments across different deployment stages (local development, testing, production). Docker ensures easy replication of the services, simplifies the setup, and enhances portability.
-
-3. **Orchestration with Docker Compose**: The use of **Docker Compose** to orchestrate the microservices and their dependencies (e.g., PostgreSQL database) demonstrates a practical approach to manage multi-container applications. It enables easy startup and teardown of services with just one command.
-
-4. **Cloud Deployment and Autoscaling**:
-   - The project is designed with cloud deployment in mind. For example, using **Google Cloud Run**, a serverless platform that automatically scales the services based on traffic. This ensures that the system can handle varying loads without manual intervention.
-   - The system also has the potential for **distributed computing**, as it can be deployed across multiple regions with minimal effort. This enables global scalability, lower latency, and improved resilience in case of regional failures.
-   - Terraform scripts can be used to automate infrastructure deployment on **Google Cloud Platform (GCP)**, making the system cloud-ready and efficient for resource management.
-
-5. **Database and Storage**:
-   - The project uses **PostgreSQL** as the relational database to store shortened URLs and associated metadata. This demonstrates the ability to handle persistence with relational databases and manage schema migrations using Docker.
-
-6. **DevOps and Infrastructure as Code (IaC)**:
-   - By integrating **Terraform** for infrastructure management, the project follows DevOps best practices of **Infrastructure as Code** (IaC). Terraform is used to provision and manage cloud resources like Cloud Run, ensuring reproducibility and reducing manual cloud setup errors.
-   - The use of **Terraform** also emphasizes the importance of cloud automation, secure secret management (e.g., securing GCP service account keys), and configuring cloud firewalls for security.
-
-7. **CI/CD Pipeline Potential**: With containerization and microservices, this project is well-suited for integration with CI/CD pipelines, enabling continuous integration and deployment for faster release cycles and automated testing.
-
-### SaaS Development
-
-This project aligns with modern **SaaS (Software as a Service)** development principles, allowing users to interact with the system via a cloud-hosted web application. The following SaaS-related technologies and concepts are demonstrated:
-
-- **Scalability**: By leveraging **Google Cloud Run**, the services automatically scale to handle more requests based on demand, making the system well-suited for a multi-tenant SaaS platform.
-- **Microservices**: The URL shortening logic is broken down into manageable, independent services, which allows for easy updates and independent deployment cycles for each service.
-- **Security and Isolation**: Using microservices and cloud-native technologies allows each service to be isolated, which enhances security. Additionally, secrets management and authentication mechanisms can be easily integrated for SaaS use cases.
-- **Cloud-Native Deployment**: The infrastructure is designed to be hosted on cloud platforms, demonstrating the potential to scale globally, with **multi-region deployments** ensuring that users from different regions can access the service with low latency.
-
-### Web Development Technologies
-
-The frontend of the project demonstrates the use of modern web development technologies and testing tools:
-
-- **React**: A JavaScript library used for building dynamic, component-based user interfaces. In this project, the React frontend enables users to interact with the URL shortener, create and manage shortened URLs, and view usage statistics.
-- **TypeScript**: The project utilizes **TypeScript** for the frontend, which provides type safety and helps reduce runtime errors, making the codebase more maintainable and scalable.
-- **Jest**: **Jest** is used for unit testing the application. By writing automated unit tests, the project ensures that key functionality is well-tested, making future code changes safer.
-- **Postman**: The project recommends using **Postman** for manual API testing, which allows for easy validation of the backend API and slug service without the need for a frontend interface. This is helpful during development and debugging to manually verify API responses.
-
-This combination of backend, frontend, and testing technologies provides a well-rounded approach to building robust and scalable web applications, especially in the context of SaaS platforms.
-
 ## Future Expansion
 
 Here are some potential features that could be added to expand the functionality of the URL shortener:

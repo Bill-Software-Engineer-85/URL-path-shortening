@@ -49,21 +49,18 @@ The frontend of the project demonstrates the use of modern web development techn
 
 This combination of backend, frontend, and testing technologies provides a well-rounded approach to building robust and scalable web applications, especially in the context of SaaS platforms.
 
-## Main Components
-
-This project is a URL shortener web application similar to Bitly or TinyURL. It allows users to create shortened URLs, manage them, and view statistics about their usage. The project is divided into four main components:
-
-- **Backend**: An Express-based RESTful API that handles URL shortening, redirection, and statistics.
 - **Slug Service**: A microservice responsible for generating unique slugs for shortened URLs.
 - **Frontend**: A React application that provides a user interface to interact with the URL shortener.
 - **Database**: A simple database created in Postgres to store shortened URL.
 
 ## Project Structure
 
-- `backend/`: The Express server handling the main API logic.
-- `slug-service/`: The microservice for generating unique slugs.
-- `frontend/`: The React app for interacting with the URL shortener.
-- `database/`: Schema and docker definition for the postgres database.
+This URL shortener web application is divided into four main components, each housed in a separate folder:
+
+- **Backend** (`backend/`): An Express-based RESTful API that handles URL shortening, redirection, and statistics.
+- **Slug Service** (`slug-service/`): A microservice responsible for generating unique slugs for shortened URLs.
+- **Frontend** (`frontend/`): A React application that provides a user interface for interacting with the URL shortener.
+- **Database** (`database/`): A simple PostgreSQL database for storing shortened URLs. The folder contains the database schema and Docker configuration.
 
 ## Prerequisites for Local Deployment
 

@@ -49,10 +49,6 @@ The frontend of the project demonstrates the use of modern web development techn
 
 This combination of backend, frontend, and testing technologies provides a well-rounded approach to building robust and scalable web applications, especially in the context of SaaS platforms.
 
-- **Slug Service**: A microservice responsible for generating unique slugs for shortened URLs.
-- **Frontend**: A React application that provides a user interface to interact with the URL shortener.
-- **Database**: A simple database created in Postgres to store shortened URL.
-
 ## Project Structure
 
 This URL shortener web application is divided into four main components, each housed in a separate folder:

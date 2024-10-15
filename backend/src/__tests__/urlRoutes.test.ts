@@ -105,4 +105,44 @@ describe('URL Shortener Routes', () => {
         expect(response.body).toEqual({ error: 'URL not found' });
         });
     });
+
+    describe('GET /download/csv', () => {
+        it('should return a CSV file with statistics for shortened URLs', async () => {
+            // Mocking the database query result for stats retrieval
+            mockPool.query.mockResolvedValueOnce({
+                rows: [
+                    { slug: 'abc123', original_url: 'https://www.example.com', visit_count: 10, created_at: '2023-01-01T12:00:00Z' },
+                    { slug: 'xyz456', original_url: 'https://www.google.com', visit_count: 20, created_at: '2023-02-01T12:00:00Z' },
+                ],
+            });
+    
+            const response = await request(app).get('/download/csv');
+    
+            expect(response.status).toBe(200);
+            expect(response.headers['content-type']).toBe('text/csv');
+            expect(response.headers['content-disposition']).toBe('attachment;filename=shortened_urls.csv');
+    
+            // Verify the CSV content
+            const expectedCsv = [
+                'Slug,Original URL,Visit Count,Created At',
+                'abc123,https://www.example.com,10,2023-01-01T12:00:00.000Z',
+                'xyz456,https://www.google.com,20,2023-02-01T12:00:00.000Z',
+            ].join('\n');
+    
+            expect(response.text.trim()).toEqual(expectedCsv);
+        });
+    
+        it('should return a 404 if there is no data available', async () => {
+            // Mocking the database query to return no rows
+            mockPool.query.mockResolvedValueOnce({
+                rows: [],
+            });
+    
+            const response = await request(app).get('/download/csv');
+    
+            expect(response.status).toBe(404);
+            expect(response.body).toEqual({ error: 'No data available' });
+        });
+    });
+    
 });

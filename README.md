@@ -160,6 +160,16 @@ You can manually test the API endpoints using Postman by following these steps:
      - `endDate`: Specify the end date in `YYYY-MM-DD` format.
    - **Send Request**: Click "Send" and verify that the response contains statistics about shortened URLs.
 
+4. **GET /download/csv**
+   - **URL**: `http://localhost:8080/download/csv`
+   - **Method**: GET
+   - **Send Request**: Click "Send" and verify that the response contains a downloadable CSV file with information about shortened URLs.
+   - **Headers**: The response should have the `Content-Type` as `text/csv` and `Content-Disposition` as `attachment;filename=shortened_urls.csv`.
+   - **Expected CSV**: The CSV file will contain the following columns:
+     ```
+     Slug,Original URL,Visit Count,Created At
+     ```
+
 ### Step 2: Test Slug-Service Endpoints
 
 1. **GET /generate-slug**

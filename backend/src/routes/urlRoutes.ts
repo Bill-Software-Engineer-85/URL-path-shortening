@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { shortenUrl } from '../services/shortenService';
 import { redirectUrl } from '../services/redirectService';
 import { getStats } from '../services/statsService';
+import { downloadCsv } from '../services/downloadCsvService';
 import url from 'url';
 
 const router = express.Router();
@@ -51,3 +52,11 @@ router.get('/:slug', (async (req: Request, res: Response) => {
   }
 }) as RequestHandler);
 
+// Route to download CSV
+router.get('/download/csv', (async (req: Request, res: Response) => {
+  try {
+      await downloadCsv(res);
+  } catch (error) {
+      res.status(500).json({ error: 'Error generating CSV' });
+  }
+}) as RequestHandler);

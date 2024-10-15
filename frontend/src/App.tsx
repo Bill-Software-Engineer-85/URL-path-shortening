@@ -45,6 +45,27 @@ const App: React.FC = () => {
     }
   };
 
+  const handleDownloadCSV = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/download/csv`, {
+        responseType: 'blob',
+      });
+
+      // Create a link element to trigger the download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'shortened_urls.csv'); // Set the file name
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.parentNode?.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading CSV', error);
+    }
+  };
+
   return (
     <div className="app-container">
       <div className="card">
@@ -71,6 +92,7 @@ const App: React.FC = () => {
       </div>
       <div className="card">
         <button onClick={handleGetStats} className="stats-button">Get Stats</button>
+        <button onClick={handleDownloadCSV} className="download-button">Download CSV</button>
         {stats.length > 0 && (
           <div className="stats">
             <h2>Stats</h2>

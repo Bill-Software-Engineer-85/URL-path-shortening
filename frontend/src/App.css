@@ -57,7 +57,7 @@
   text-decoration: underline;
 }
 
-.stats-button {
+.stats-button, .download-button {
   padding: 10px;
   font-size: 16px;
   background-color: #28a745;
@@ -65,10 +65,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.stats-button {
-  background-color: #218838;
+  margin-right:50px;
 }
 
 .stats {

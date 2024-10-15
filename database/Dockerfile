@@ -8,5 +8,3 @@ COPY init.sql /docker-entrypoint-initdb.d/
 ENV POSTGRES_DB urlshortener
 ENV POSTGRES_USER user
 ENV POSTGRES_PASSWORD password
-
-# The default CMD and ENTRYPOINT from the Postgres base image will take care of executing the init.sql

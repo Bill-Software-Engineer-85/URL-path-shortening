@@ -30,9 +30,7 @@ describe('URL Shortener Routes', () => {
     });
     describe('POST /shorten', () => {
         it('should return an existing shortened URL if the URL already exists', async () => {
-        // Mocking the database query to return an existing slug
         mockPool.query.mockResolvedValueOnce({ rows: [{ slug: 'abc123' }] });
-
         const response = await request(app)
             .post('/shorten')
             .set('Host', 'localhost:3000')
@@ -43,14 +41,11 @@ describe('URL Shortener Routes', () => {
         });
 
         it('should generate a new shortened URL if the URL does not exist', async () => {
-        // Mocking the database query to simulate no existing URL and a successful insert
         mockPool.query
             .mockResolvedValueOnce({ rows: [] }) // No existing URL found
             .mockResolvedValueOnce({}); // Successful insertion
-
         // Mocking axios to return a new slug from slug-service
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: { slug: 'newSlug' } });
-
         const response = await request(app)
             .post('/shorten')
             .set('Host', 'localhost:3000')
@@ -58,6 +53,23 @@ describe('URL Shortener Routes', () => {
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ shortenedUrl: 'http://localhost:3000/newSlug' });
+        });
+
+        it('should return an error when an empty URL is provided', async () => {
+          const response = await request(app)
+              .post('/shorten')
+              .set('Host', 'localhost:3000')
+              .send({ url: '' });
+          expect(response.status).toBe(400);
+        });
+
+        it('should return an error for invalid URL format', async () => {
+          const response = await request(app)
+              .post('/shorten')
+              .set('Host', 'localhost:3000')
+              .send({ url: 'invalid_url' });
+
+          expect(response.status).toBe(400);
         });
     });
 

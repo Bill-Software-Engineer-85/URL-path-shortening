@@ -226,8 +226,6 @@ project_id = "your-google-cloud-project-id"
 
 - Do Not Commit `terraform.tfvars` to Version Control: This file contains your project ID.
 
-- Consistent Variable Usage: Ensure that the variable name `project_id` in your Terraform configuration matches the one in your `terraform.tfvars` file.
-
 ### Step 3: Pre-Build and Push Docker Images
 The Terraform configuration uses custom Docker images that need to be pushed to Artifact Registry prior to running Terraform. Use the `docker_push.sh` script to push the Docker images after building them.
 
@@ -288,6 +286,16 @@ terraform apply
 ```
 
 This command will prompt you to confirm the changes. Type `yes` to proceed.
+
+**Important Notes:**
+
+- If you have already deployed to GCP using terraform but have change the Docker image afterward, terraform will not automatically detect this change.  You must mark the image as `tainted` to allow redeployment.
+
+   ```sh
+   terraform taint google_cloud_run_service.frontend_instance
+   terraform taint google_cloud_run_service.backend_service  
+   terraform taint google_cloud_run_service.slug_service  
+   ```
 
 ### Step 5: Initialize the Database
 After the PostgreSQL instance is created by Terraform, you need to manually run an SQL script to initialize the database.

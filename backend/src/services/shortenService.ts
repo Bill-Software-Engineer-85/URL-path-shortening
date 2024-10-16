@@ -11,9 +11,8 @@ const pool = new Pool({
 
 export const shortenUrl = async (server: string, url: string) => {
   try {
-
     // Check if URL starts with "http://" or "https://"
-    let formattedUrl = url.trim();
+    let formattedUrl = url.trim().toLocaleLowerCase();
     if (!/^https?:\/\//i.test(formattedUrl)) {
       formattedUrl = `http://${formattedUrl}`;
     }

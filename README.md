@@ -251,11 +251,14 @@ The Terraform configuration uses custom Docker images that need to be pushed to 
 1. Set Up an Artifact Registry Repository
    - Create a Docker repository in Artifact Registry named `url-shortener`.
    - Note the repository location (e.g., `us-central1-docker.pkg.dev`).
+   
+   **Important Notes:**
+   - Since the project is hardcoded to `us-central1` in `main.tf`, it is highly recommended to keep the repository in the same region.
+   
 2. Authenticate Docker with Artifact Registry
    ```sh
    gcloud auth configure-docker us-central1-docker.pkg.dev
    ```
-   Replace `us-central1` with your repository's region.
 
 #### Building Docker Images Locally
 

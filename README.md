@@ -187,30 +187,51 @@ You can manually test the API endpoints using Postman by following these steps:
 
 This project can be deployed on Google Cloud Platform (GCP) using Terraform. Below are the instructions for pushing Docker images and running Terraform.
 
-### Prerequisites for GCP
+### Step 0: Prerequisites for GCP
 
 Before deploying to GCP, ensure you have the following:
 
 - **Google Cloud SDK:** Installed and configured.
 - **Terraform:** Installed.
-- **GCP Project:** A GCP project is set up (e.g., `url-shortener-project-438318`).
-- **Service Account & Key:** A service account is created and it's key file (`gcp-key.json`) downloaded for authentication purposes.
 - **Docker:** Installed and configured.
 - **psql or SQL Client (Optional):** For interacting with the PostgreSQL database directly.
 
 ### Step 1: Setting Up GCP
-1. Enable Necessary APIs in GCP:
+
+1. Create a new GCP Project:
+   - Go to the [GCP Console](https://console.cloud.google.com/), and create a new GCP project.
+   - Example: `url-shortener-project-438318`.
+   - Once the project is created, note the project ID, as you will need it for setting up Terraform.
+
+   **Important Notes:**
+   - Project region is currently hard coded to `us-central1`, it is possible to manually change this in `main.tf` but it's recommended to simply use `us-central1`
+
+2. **Enable Billing:**
+   - Ensure that billing is enabled for your project so you can use Google Cloud services.
+
+3. Create a Service Account & Download the Key:
+   - In the GCP Console, navigate to **IAM & Admin** > **Service Accounts**.
+   - Create a new service account for your project.
+   - Assign appropriate roles to the service account (e.g., **Cloud Run Admin**, **Storage Admin**, **Cloud SQL Admin**).
+   - Once the service account is created, generate a key in JSON format.
+   - Download the key file and save it as `gcp-key.json` in your project directory.
+
+4. Enable Necessary APIs in GCP:
    - Compute Engine API: Required for provisioning virtual machines.
    - Cloud Run API: Required for deploying containerized applications.
    - Cloud SQL Admin API: Required for managing PostgreSQL instances.
    - Artifact Registry API: Required for storing and retrieving container images.
 
-2. Authenticate using the service account key file:
+5. Create an Artifact Repository:
+   - Navigate to the GCP Console and create an Artifact Registry repository named `url-shortner` in the `us-central1` region. This is required to upload Docker images.
+
+6. Authenticate using the service account key file:
    ```sh
    export GOOGLE_APPLICATION_CREDENTIALS="gcp-key.json"
    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
    ```
-### Step 2: Setting Up Your Google Cloud Project ID
+
+### Step 2: Set Project ID
 
 Before running Terraform, you need to specify your GCP project ID. This is done by creating a `terraform.tfvars` file.
 

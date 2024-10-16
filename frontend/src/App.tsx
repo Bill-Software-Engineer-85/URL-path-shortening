@@ -7,6 +7,8 @@ const App: React.FC = () => {
   const [shortenedUrl, setShortenedUrl] = useState('');
   const [stats, setStats] = useState([]);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const runtimeConfig = window.ENV || {
     BACKEND_URL: 'http://localhost:8080', // default value if not set
@@ -37,13 +39,17 @@ const App: React.FC = () => {
   };
 
   const handleGetStats = async () => {
+    setIsLoading(true); // Start loading
     try {
       const response = await axios.get(`${backendUrl}/stats`);
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching stats', error);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
+
 
   const handleDownloadCSV = async () => {
     try {
@@ -93,52 +99,58 @@ const App: React.FC = () => {
       <div className="card">
         <button onClick={handleGetStats} className="stats-button">Get Stats</button>
         <button onClick={handleDownloadCSV} className="download-button">Download CSV</button>
-        {stats.length > 0 && (
-          <div className="stats">
-            <h2>Stats</h2>
-            <table className="stats-table">
-              <thead>
-                <tr>
-                  <th>Slug</th>
-                  <th>Original URL</th>
-                  <th>Visit Count</th>
-                  <th>Created At</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.map((stat: any, index) => (
-                  <tr key={index}>
-                    <td>
-                      <a
-                        href={`${backendUrl}/${stat.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {stat.slug}
-                      </a>
-                    </td>
-                    <td>
-                      <a href={stat.original_url} target="_blank" rel="noopener noreferrer">
-                        {stat.original_url}
-                      </a>
-                    </td>
-                    <td>{stat.visit_count}</td>
-                    <td>
-                      {new Intl.DateTimeFormat('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                      }).format(new Date(stat.created_at))}
-                    </td>
+        {isLoading && <div className="spinner"></div>}
+        {isLoading ? (
+          <div className="loading-message">Loading stats...</div>
+        ) : (
+          stats.length > 0 && (
+            <div className="stats">
+              <h2>Stats</h2>
+              <table className="stats-table">
+                <thead>
+                  <tr>
+                    <th>Slug</th>
+                    <th>Original URL</th>
+                    <th>Visit Count</th>
+                    <th>Created At</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {stats.map((stat: any, index) => (
+                    <tr key={index}>
+                      <td>
+                        <a
+                          href={`${backendUrl}/${stat.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {stat.slug}
+                        </a>
+                      </td>
+                      <td>
+                        <a href={stat.original_url} target="_blank" rel="noopener noreferrer">
+                          {stat.original_url}
+                        </a>
+                      </td>
+                      <td>{stat.visit_count}</td>
+                      <td>
+                        {new Intl.DateTimeFormat('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                        }).format(new Date(stat.created_at))}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
         )}
+
       </div>
       <footer className="footer">
         <p>Made by Bill Yu</p>

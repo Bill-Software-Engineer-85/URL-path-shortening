@@ -206,7 +206,7 @@ Before deploying to GCP, ensure you have the following:
    **Important Notes:**
    - Project region is currently hard coded to `us-central1`, it is possible to manually change this in `main.tf` but it's recommended to simply use `us-central1`
 
-2. **Enable Billing:**
+2. Enable Billing:
    - Ensure that billing is enabled for your project so you can use Google Cloud services.
 
 3. Create a Service Account & Download the Key:
@@ -222,10 +222,7 @@ Before deploying to GCP, ensure you have the following:
    - Cloud SQL Admin API: Required for managing PostgreSQL instances.
    - Artifact Registry API: Required for storing and retrieving container images.
 
-5. Create an Artifact Repository:
-   - Navigate to the GCP Console and create an Artifact Registry repository named `url-shortner` in the `us-central1` region. This is required to upload Docker images.
-
-6. Authenticate using the service account key file:
+5. Authenticate using the service account key file:
    ```sh
    export GOOGLE_APPLICATION_CREDENTIALS="gcp-key.json"
    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS

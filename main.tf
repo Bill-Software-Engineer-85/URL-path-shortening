@@ -62,6 +62,11 @@ resource "google_cloud_run_service_iam_member" "backend_service_noauth" {
   role        = "roles/run.invoker"
   member      = "allUsers"
   depends_on = [google_cloud_run_service.backend_service]
+  lifecycle {
+    replace_triggered_by = [
+      google_cloud_run_service.backend_service
+    ]
+  }
 }
 
 # Deploy the Slug-Service to Cloud Run
@@ -117,6 +122,11 @@ resource "google_cloud_run_service_iam_member" "slug_service_noauth" {
   role        = "roles/run.invoker"
   member      = "allUsers"
   depends_on = [google_cloud_run_service.slug_service]
+  lifecycle {
+    replace_triggered_by = [
+      google_cloud_run_service.slug_service
+    ]
+  }
 }
 
 # Deploy the Frontend Service to Cloud Run
@@ -161,6 +171,11 @@ resource "google_cloud_run_service_iam_member" "frontend_noauth" {
   role        = "roles/run.invoker"
   member      = "allUsers"
   depends_on = [google_cloud_run_service.frontend_instance]
+  lifecycle {
+    replace_triggered_by = [
+      google_cloud_run_service.frontend_instance
+    ]
+  }
 }
 
 # Create a Cloud SQL instance for PostgreSQL

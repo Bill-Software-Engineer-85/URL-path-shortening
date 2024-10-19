@@ -100,7 +100,6 @@ describe('URL Shortener Routes', () => {
 
     describe('GET /stats', () => {
         it('should return statistics for all shortened URLs', async () => {
-        // Mocking the database query result for stats retrieval
         mockPool.query.mockResolvedValueOnce({
             rows: [
             { slug: 'abc123', original_url: 'https://www.example.com', visit_count: 10 },
@@ -120,12 +119,11 @@ describe('URL Shortener Routes', () => {
 
     describe('GET /:slug', () => {
         it('should redirect to the original URL and increment the visit count', async () => {
-        // Mocking the database query to find the original URL and increment the visit count
         mockPool.query
             .mockResolvedValueOnce({
             rows: [{ original_url: 'https://www.example.com', visit_count: 5 }],
-            }) // Find the original URL
-            .mockResolvedValueOnce({}); // Successful increment of visit count
+            }) 
+            .mockResolvedValueOnce({}); 
 
         const response = await request(app).get('/abc123');
 
@@ -145,7 +143,6 @@ describe('URL Shortener Routes', () => {
 
     describe('GET /download/csv', () => {
         it('should return a CSV file with statistics for shortened URLs', async () => {
-            // Mocking the database query result for stats retrieval
             mockPool.query.mockResolvedValueOnce({
                 rows: [
                     { slug: 'abc123', original_url: 'https://www.example.com', visit_count: 10, created_at: '2023-01-01T12:00:00Z' },
@@ -170,7 +167,6 @@ describe('URL Shortener Routes', () => {
         });
     
         it('should return a 404 if there is no data available', async () => {
-            // Mocking the database query to return no rows
             mockPool.query.mockResolvedValueOnce({
                 rows: [],
             });

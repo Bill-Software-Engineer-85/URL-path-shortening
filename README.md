@@ -232,8 +232,6 @@ Before deploying to GCP, ensure you have the following:
 
 Before running Terraform, you need to specify your GCP project ID. This is done by creating a `terraform.tfvars` file.
 
-#### Create a `terraform.tfvars` File
-
 In the root directory of your project (where your Terraform configuration files are located), create a file named `terraform.tfvars`.  You may use the `terraform.tfvars.example` file as a template.
 
 Add the following content to `terraform.tfvars`:
@@ -254,7 +252,7 @@ The Terraform configuration uses custom Docker images that need to be pushed to 
    
    **Important Notes:**
    - Since the project is hardcoded to `us-central1` in `main.tf`, it is highly recommended to keep the repository in the same region.
-   
+
 2. Authenticate Docker with Artifact Registry
    ```sh
    gcloud auth configure-docker us-central1-docker.pkg.dev

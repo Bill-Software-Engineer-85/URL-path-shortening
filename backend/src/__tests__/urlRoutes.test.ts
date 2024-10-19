@@ -42,9 +42,8 @@ describe('URL Shortener Routes', () => {
 
         it('should generate a new shortened URL if the URL does not exist', async () => {
         mockPool.query
-            .mockResolvedValueOnce({ rows: [] }) // No existing URL found
-            .mockResolvedValueOnce({}); // Successful insertion
-        // Mocking axios to return a new slug from slug-service
+            .mockResolvedValueOnce({ rows: [] })
+            .mockResolvedValueOnce({}); 
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: { slug: 'newSlug' } });
         const response = await request(app)
             .post('/shorten')
@@ -71,6 +70,32 @@ describe('URL Shortener Routes', () => {
 
           expect(response.status).toBe(400);
         });
+
+        it('should treat URLs with and without trailing slashes as equal', async () => {
+            
+            // First request with trailing slash
+            mockPool.query.mockResolvedValueOnce({ rows: [{ slug: 'equalSlug' }] });
+            const responseWithSlash = await request(app)
+                .post('/shorten')
+                .set('Host', 'localhost:3000')
+                .send({ url: 'https://www.example.com/' });
+            expect(responseWithSlash.status).toBe(200);
+            expect(responseWithSlash.body).toEqual({ shortenedUrl: 'http://localhost:3000/equalSlug' });
+  
+            // Second request without trailing slash
+            mockPool.query.mockResolvedValueOnce({
+                rows: [
+                { slug: 'equalSlug', original_url: 'https://www.example.com', visit_count: 10 },
+                ],
+            });
+            const responseWithoutSlash = await request(app)
+                .post('/shorten')
+                .set('Host', 'localhost:3000')
+                .send({ url: 'https://www.example.com' });
+  
+            expect(responseWithoutSlash.status).toBe(200);
+            expect(responseWithoutSlash.body).toEqual({ shortenedUrl: 'http://localhost:3000/equalSlug' });
+          });
     });
 
     describe('GET /stats', () => {

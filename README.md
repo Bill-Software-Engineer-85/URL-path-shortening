@@ -212,7 +212,7 @@ Before deploying to GCP, ensure you have the following:
 3. Create a Service Account & Download the Key:
    - In the GCP Console, navigate to **IAM & Admin** > **Service Accounts**.
    - Create a new service account for your project.
-   - Assign appropriate roles to the service account (e.g., **Cloud Run Admin**, **Storage Admin**, **Cloud SQL Admin**).
+   - Assign appropriate roles to the service account (e.g., **Artifact Registry Administrator**, **Cloud Run Admin**, **Cloud SQL Admin**, **Compute Engine**, **Service Account User**).
    - Once the service account is created, generate a key in JSON format.
    - Download the key file and save it as `gcp-key.json` in your project directory.
 
@@ -224,8 +224,7 @@ Before deploying to GCP, ensure you have the following:
 
 5. Authenticate using the service account key file:
    ```sh
-   export GOOGLE_APPLICATION_CREDENTIALS="gcp-key.json"
-   gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+   gcloud auth activate-service-account --key-file=gcp-key.json
    ```
 
 ### Step 2: Set Project ID

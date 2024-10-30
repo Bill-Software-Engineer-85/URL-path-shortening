@@ -24,6 +24,7 @@ coverage/
 *.tfstate
 terraform.tfstate.backup
 terraform.tfvars
+terraform-provider*
 
 #GCP Key
 gcp-key.json

@@ -10,6 +10,12 @@ resource "google_cloud_run_service" "backend_service" {
   name     = "backend-service"
   location = "us-central1"
 
+  depends_on = [
+    google_sql_database_instance.postgres_instance,
+    google_sql_database.shortener_db,
+    google_sql_user.postgres_user
+  ]
+
   template {
     spec {
       containers {
@@ -37,7 +43,7 @@ resource "google_cloud_run_service" "backend_service" {
         }
         env {
           name  = "POSTGRES_HOST"
-          value = google_sql_database_instance.postgres-instance.public_ip_address
+          value = google_sql_database_instance.postgres_instance.public_ip_address
         }
         env {
           name = "SLUG_SERVICE_URL"
@@ -74,6 +80,12 @@ resource "google_cloud_run_service" "slug_service" {
   name     = "slug-service"
   location = "us-central1"
 
+  depends_on = [
+    google_sql_database_instance.postgres_instance,
+    google_sql_database.shortener_db,
+    google_sql_user.postgres_user
+  ]
+
   template {
     spec {
       containers {
@@ -101,7 +113,7 @@ resource "google_cloud_run_service" "slug_service" {
         }
         env {
           name  = "POSTGRES_HOST"
-          value = google_sql_database_instance.postgres-instance.public_ip_address
+          value = google_sql_database_instance.postgres_instance.public_ip_address
         }
       }
     }
@@ -179,7 +191,7 @@ resource "google_cloud_run_service_iam_member" "frontend_noauth" {
 }
 
 # Create a Cloud SQL instance for PostgreSQL
-resource "google_sql_database_instance" "postgres-instance" {
+resource "google_sql_database_instance" "postgres_instance" {
   name             = "postgres-instance"
   database_version = "POSTGRES_13"
   region           = "us-central1"
@@ -198,12 +210,14 @@ resource "google_sql_database_instance" "postgres-instance" {
 # Create a Cloud SQL database within the instance
 resource "google_sql_database" "shortener_db" {
   name     = "urlshortener"
-  instance = google_sql_database_instance.postgres-instance.name
+  instance = google_sql_database_instance.postgres_instance.name
+  depends_on = [google_sql_database_instance.postgres_instance]
 }
 
 # Create a Cloud SQL user
 resource "google_sql_user" "postgres_user" {
   name     = "user"
-  instance = google_sql_database_instance.postgres-instance.name
+  instance = google_sql_database_instance.postgres_instance.name
   password = "password"
+  depends_on = [google_sql_database_instance.postgres_instance]
 }
